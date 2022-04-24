@@ -286,7 +286,7 @@ namespace osu.Game.Screens.Menu
             {
                 this.Delay(early_activation).Schedule(() =>
                 {
-                    if (beatIndex % timingPoint.TimeSignature.Numerator == 0)
+                    if (beatIndex % timingPoint.TimeSignature.Numerator == 0 && !(beatIndex == 0 && effectPoint.OmitFirstBarLine))
                     {
                         sampleDownbeat?.Play();
                     }

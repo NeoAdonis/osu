@@ -69,9 +69,11 @@ namespace osu.Game.Rulesets.Objects
                 if (currentEffectPoint.OmitFirstBarLine)
                 {
                     startTime += barLength;
+                    currentBar++;
                 }
 
-                for (double t = startTime; Precision.AlmostBigger(endTime, t); t += barLength, currentBeat++)
+                // generate at least one bar line per timing point (unless explicitly omitted)
+                for (double t = startTime; Precision.DefinitelyBigger(endTime, t) || currentBar == 0; t += barLength, currentBar++)
                 {
                     double roundedTime = Math.Round(t, MidpointRounding.AwayFromZero);
 
@@ -86,7 +88,7 @@ namespace osu.Game.Rulesets.Objects
                     BarLines.Add(new TBarLine
                     {
                         StartTime = t,
-                        Major = currentBeat % currentTimingPoint.TimeSignature.Numerator == 0
+                        Major = currentBar % currentTimingPoint.TimeSignature.Numerator == 0
                     });
                 }
             }

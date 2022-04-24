@@ -100,12 +100,12 @@ namespace osu.Game.Rulesets.Mods
                     firstBeat = beatIndex < 0 ? 0 : (beatIndex / segmentLength + 1) * segmentLength;
 
                 if (beatIndex >= firstBeat)
-                    playBeatFor(beatIndex % segmentLength, timingPoint.TimeSignature);
+                    playBeatFor(beatIndex % segmentLength, timingPoint.TimeSignature, beatIndex == 0 && effectPoint.OmitFirstBarLine);
             }
 
-            private void playBeatFor(int beatIndex, TimeSignature signature)
+            private void playBeatFor(int beatIndex, TimeSignature signature, bool skipMajorBeatEffect)
             {
-                if (beatIndex == 0)
+                if (beatIndex == 0 && !skipMajorBeatEffect)
                     finishSample?.Play();
 
                 switch (signature.Numerator)

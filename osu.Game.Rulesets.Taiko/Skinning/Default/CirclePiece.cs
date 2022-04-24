@@ -195,6 +195,9 @@ namespace osu.Game.Rulesets.Taiko.Skinning.Default
             if (beatIndex % timingPoint.TimeSignature.Numerator != 0)
                 return;
 
+            if (beatIndex == 0 && effectPoint.OmitFirstBarLine)
+                return;
+
             double duration = timingPoint.BeatLength * 2;
 
             background

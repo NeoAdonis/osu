@@ -450,6 +450,8 @@ namespace osu.Game.Beatmaps.Formats
                 OmitFirstBarLine = omitFirstBarSignature,
             };
 
+            omitFirstBarLine = omitFirstBarLine || (omitFirstBarSignature && timingChange);
+
             // osu!taiko and osu!mania use effect points rather than difficulty points for scroll speed adjustments.
             if (onlineRulesetID == 1 || onlineRulesetID == 3)
                 effectPoint.ScrollSpeed = speedMultiplier;
@@ -468,6 +470,7 @@ namespace osu.Game.Beatmaps.Formats
         private readonly HashSet<Type> pendingControlPointTypes = new HashSet<Type>();
         private double pendingControlPointsTime;
         private bool hasApproachRate;
+        private bool omitFirstBarLine = false;
 
         private void addControlPoint(double time, ControlPoint point, bool timingChange)
         {
@@ -491,12 +494,18 @@ namespace osu.Game.Beatmaps.Formats
                 if (pendingControlPointTypes.Contains(type))
                     continue;
 
+                if (pendingControlPoints[i] is EffectControlPoint e)
+                {
+                    ((EffectControlPoint)pendingControlPoints[i]).OmitFirstBarLine = omitFirstBarLine;
+                }
+
                 pendingControlPointTypes.Add(type);
                 beatmap.ControlPointInfo.Add(pendingControlPointsTime, pendingControlPoints[i]);
             }
 
             pendingControlPoints.Clear();
             pendingControlPointTypes.Clear();
+            omitFirstBarLine = false;
         }
 
         private void handleHitObject(string line)
